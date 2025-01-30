@@ -13,10 +13,10 @@ async def get_admin_page() -> dict:
 
 
 @app.get("/user/{user_id}")
-async def get_user_id(user_id: str) -> dict:
+async def get_user_number(user_id: str) -> dict:
     return {"message": f"Вы вошли как пользователь № {user_id}"}
 
 
 @app.get("/user")
-async def get_user(username: str, age: str) -> dict:
+async def get_user_info(username: str, age: str) -> dict:
     return {"Имя": username, "Возраст": age}
