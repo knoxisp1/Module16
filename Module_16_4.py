@@ -3,9 +3,9 @@ from fastapi import FastAPI, Body, HTTPException, Path
 from pydantic import BaseModel
 
 app = FastAPI
-valid_username = Annotated[str, Path(min_length=3, max_length=20, description="Enter a name", example="Max")]
-valid_age = Annotated[int, Path(ge=18, le=100, description="Enter age", example=19)]
-valid_id = Annotated[int, Path(ge=0, le=10000000, description="Enter id", example=2)]
+valid_username = Annotated[str, Path(min_length=3, max_length=20, description="Enter a name")]
+valid_age = Annotated[int, Path(ge=18, le=100, description="Enter age")]
+valid_id = Annotated[int, Path(ge=0, le=10000000, description="Enter id")]
 
 users = []
 
