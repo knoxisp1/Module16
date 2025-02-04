@@ -1,43 +1,36 @@
-from typing import Annotated, List
-from fastapi import FastAPI, Body, HTTPException, Path
+from fastapi import FastAPI, Body, HTTPException
 from pydantic import BaseModel
+from typing import List
 
-app = FastAPI
-valid_username = Annotated[str, Path(min_length=3, max_length=20, description="Enter a name")]
-valid_age = Annotated[int, Path(ge=18, le=100, description="Enter age")]
-valid_id = Annotated[int, Path(ge=0, le=10000000, description="Enter id")]
-
+app = FastAPI()
+# Создаем пустой список Users
 users = []
 
 
 class User(BaseModel):
-    id: valid_id
-    username: valid_username
-    age: valid_age
+    id: int
+    username: str
+    age: int
 
 
-@app.get("/users")
-async def get_all_users() -> List[User]:
+@app.get('/users', response_model=List[User])
+async def main():
     return users
 
 
-@app.post('/user/{username}/{age}')
-async def create_user(username: valid_username, age: valid_age):
-    try:
-        id = users[-1].id + 1
-    except:
-        id = 1
-
-    user = User(id=id, username=username, age=age)
-    users.append(user)
-    return user
+@app.post("/user/{username}/{age}", response_model=User)
+def create_user(username: str, age: int):
+    user_id = len(users) + 1
+    new_user = User(id=user_id, username=username, age=age)
+    users.append(new_user)
+    return new_user
 
 
-@app.put('/user/{user_id}/{username}/{age}')
-async def update_user(user_id: valid_id, username: valid_username, age: valid_age):
+@app.put('/user/{user_id}/{username}/{age}', response_model=User)
+async def update_user(user_id: int, username: str, age: int):
     try:
         for user in users:
-            if user_id == user.id:
+            if user.id == user_id:
                 user.username = username
                 user.age = age
                 return user
@@ -45,10 +38,10 @@ async def update_user(user_id: valid_id, username: valid_username, age: valid_ag
         raise HTTPException(status_code=404, detail="User was not found")
 
 
-@app.delete("/user/{user_id}")
-async def del_user(user_id: valid_id) -> str:
-    for __id, user in enumerate(users):
+@app.delete("/user/{user_id}", response_model=User)
+def delete_user(user_id: int):
+    for user in users:
         if user.id == user_id:
-            users.pop(__id)
+            users.remove(user)
             return user
     raise HTTPException(status_code=404, detail="User was not found")
