@@ -1,5 +1,6 @@
-from fastapi import FastAPI, Path
 from typing import Annotated
+
+from fastapi import FastAPI, Path
 
 app = FastAPI()
 
@@ -11,17 +12,15 @@ async def main_page():
 
 @app.get("/user/admin")
 async def admin_page():
-    return "Вы вошли как администратор"
+    return "Вы вошли как Администратор"
 
 
 @app.get("/user/{user_id}")
-async def get_user_id(
-        user_id: Annotated[int, Path(ge=1, le=100, description="Enter User ID")]):
-    return f"Вы вошли как пользователь № {user_id} "
+async def get_user_id(user_id: Annotated[int, Path(ge=1, le=100, description="Enter User ID")]):
+    return f"Вы вошли как пользователь № {user_id}"
 
 
 @app.get("/user")
-async def user_info(
-        username: Annotated[str, Path(max_length=20, min_length=5, description="Enter username")],
-        age: Annotated[int, Path(ge=18, le=120, description="Enter age")]):
+async def get_user_info(username: Annotated[str, Path(min_length=5, max_length=20, description="Enter Username")],
+                        age: Annotated[int, Path(ge=18, le=120, description="Enter Age")]):
     return f"Информация о пользователе. Имя:{username},Возраст:{age}"
